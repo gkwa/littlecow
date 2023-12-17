@@ -24,7 +24,7 @@ func removeTimestamp(groups []string, attr *slog.Attr) {
 	}
 }
 
-func adjustSourcePath(groups []string, attr *slog.Attr) {
+func truncateSourcePath(groups []string, attr *slog.Attr) {
 	if attr.Key == slog.SourceKey {
 		source, _ := attr.Value.Any().(*slog.Source)
 		if source != nil {
@@ -35,11 +35,15 @@ func adjustSourcePath(groups []string, attr *slog.Attr) {
 
 func Replace(groups []string, attr slog.Attr) slog.Attr {
 	removeTimestamp(groups, &attr)
-	adjustSourcePath(groups, &attr)
+	truncateSourcePath(groups, &attr)
 	return attr
 }
 
 func Replace2(groups []string, attr slog.Attr) slog.Attr {
-	adjustSourcePath(groups, &attr)
+	truncateSourcePath(groups, &attr)
+	return attr
+}
+
+func Replace3(groups []string, attr slog.Attr) slog.Attr {
 	return attr
 }
