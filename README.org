@@ -1,0 +1,7 @@
+* littlecow
+
+This is a description of my littlecow.
+
+** Usage
+
+To use my project, run this command: ./littlecow --verbose
