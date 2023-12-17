@@ -18,15 +18,28 @@ func setPartialPath(source *slog.Source) {
 	source.File = filepath.Join(parentDir, fileName)
 }
 
-func Replace(groups []string, attr slog.Attr) slog.Attr {
+func removeTimestamp(groups []string, attr *slog.Attr) {
 	if attr.Key == slog.TimeKey && len(groups) == 0 {
-		return slog.Attr{}
+		*attr = slog.Attr{}
 	}
+}
+
+func adjustSourcePath(groups []string, attr *slog.Attr) {
 	if attr.Key == slog.SourceKey {
 		source, _ := attr.Value.Any().(*slog.Source)
 		if source != nil {
 			setPartialPath(source)
 		}
 	}
+}
+
+func Replace(groups []string, attr slog.Attr) slog.Attr {
+	removeTimestamp(groups, &attr)
+	adjustSourcePath(groups, &attr)
+	return attr
+}
+
+func Replace2(groups []string, attr slog.Attr) slog.Attr {
+	adjustSourcePath(groups, &attr)
 	return attr
 }
