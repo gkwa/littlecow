@@ -7,7 +7,7 @@ import (
 )
 
 func Main() int {
-	opts := OpinionatedHandlerOptions(slog.LevelDebug, Unmodified)
+	opts := NewHandlerOptions(slog.LevelDebug, Unmodified)
 	handler := slog.NewTextHandler(os.Stderr, opts)
 	logger := slog.New(handler)
 
@@ -63,10 +63,19 @@ func Unmodified(groups []string, attr slog.Attr) slog.Attr {
 	return attr
 }
 
-func OpinionatedHandlerOptions(level slog.Level, replaceFunc ReplaceFunc) *slog.HandlerOptions {
+func NewHandlerOptions(level slog.Level, replaceFunc ReplaceFunc) *slog.HandlerOptions {
 	return &slog.HandlerOptions{
 		AddSource:   true,
 		Level:       level,
 		ReplaceAttr: replaceFunc,
 	}
+}
+
+func LevelFromString(level string) (slog.Level, error) {
+	var logLevel slog.Level
+	err := logLevel.UnmarshalText([]byte(level))
+	if err != nil {
+		return slog.LevelError, nil
+	}
+	return logLevel, nil
 }
